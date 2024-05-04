@@ -1,5 +1,6 @@
 import argparse
 import asyncio
+import logging
 from aiopath import AsyncPath
 from pathlib import Path
 from aioshutil import copyfile
@@ -19,19 +20,25 @@ def get_args():
 
 async def read_folder(source: AsyncPath):
     all_files = []
-    async for path in source.iterdir():
-        if await path.is_file():
-            all_files.append(path)
-        else:
-            all_files.extend(await read_folder(path))
+    try:
+        async for path in source.iterdir():
+            if await path.is_file():
+                all_files.append(path)
+            else:
+                all_files.extend(await read_folder(path))
+    except Exception as e:
+        logging.error(e)
     return all_files
 
 
 async def copy_file(files, target: AsyncPath):
-    for file in files:
-        new_path = AsyncPath(target, file.suffix, file.name)
-        await new_path.parent.mkdir(parents=True, exist_ok=True)
-        await copyfile(file, new_path)
+    try:
+        for file in files:
+            new_path = AsyncPath(target, file.suffix, file.name)
+            await new_path.parent.mkdir(parents=True, exist_ok=True)
+            await copyfile(file, new_path)
+    except Exception as e:
+        logging.error(e)
 
 
 async def main():
@@ -43,4 +50,9 @@ async def main():
 
 
 if __name__ == "__main__":
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s %(levelname)s %(message)s",
+        datefmt="%Y-%m-%d %H:%M:%S",
+    )
     asyncio.run(main())

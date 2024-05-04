@@ -16,7 +16,7 @@ Write a Python script that will read all files in the specified input folder (so
 
 ### Solution
 
-The task is done in file `sort_files.py`. The file `seed_folder_files.py` cat be used to create fake files in the folder.
+The task is done in file `sort_files.py`. The file `seed_folder_files.py` can be used to generate fake files in the folder.
 
 ## Task 2
 Write a Python script that downloads text from a given URL, analyzes the frequency of words in the text using MapReduce and visualizes the top words with the highest frequency in the text.
